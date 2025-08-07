@@ -137,10 +137,6 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
 		blCorner->setVisible(false);
         blCorner = nullptr;
 
-        auto bLMenu = this->getChildByID("bottom-left-menu");
-        bLMenu->removeFromParentAndCleanup(true);
-        bLMenu = nullptr;
-
         creatorButtonsMenu->updateLayout();
 
         auto questButtonColor = Mod::get()->getSettingValue<std::string>("quest-color-setting");
@@ -274,4 +270,5 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
     }
 
 };
+
 
