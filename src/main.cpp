@@ -213,14 +213,8 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
 
         auto winSize = CCDirector::sharedDirector()->getWinSize();
 
-        AxisLayout* bottomLeftMenuLayout = AxisLayout::create(Axis::Column);
-        bottomLeftMenuLayout->setAxisAlignment(AxisAlignment::Start);
-        bottomLeftMenuLayout->setGap(0.0f);
-        bottomLeftMenuLayout->setAutoGrowAxis(true);
-
-        auto bottomLeftMenu = CCMenu::create();
-		bottomLeftMenu->setID("bottom-left-menu"_spr);
-        bottomLeftMenu->addChild(newSavedButton);
+        if (auto bottomLeftMenu = this->getChildByID("bottom-left-menu")) {
+		bottomLeftMenu->addChild(newSavedButton);
         bottomLeftMenu->addChild(timelyButton);
         bottomLeftMenu->addChild(newGauntletButton);
         bottomLeftMenu->addChild(newMckButton);
@@ -254,12 +248,9 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
             bottomLeftMenu->addChild(newGddpButton);
         }
 
-        this->addChild(bottomLeftMenu);
-
-        bottomLeftMenu->setAnchorPoint({0.5f, 0.0f});
-        bottomLeftMenu->setPosition(30, positionOffset);
-        bottomLeftMenu->setLayout(bottomLeftMenuLayout, true);
-
+			bottomLeftMenu->updateLayout();
+	}
+		
         AxisLayout* bottomMenuLayout = AxisLayout::create(Axis::Row);
         bottomMenuLayout->setAxisAlignment(AxisAlignment::Center);
         bottomMenuLayout->setGap(4.0f);
@@ -283,3 +274,4 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
     }
 
 };
+
