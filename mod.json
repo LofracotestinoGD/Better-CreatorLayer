@@ -1,0 +1,111 @@
+{
+	"geode": "4.7.0",
+	"gd": {
+		"win": "2.2074",
+		"android": "2.2074",
+		"mac": "2.2074",
+		"ios": "2.2074"
+	},
+	"id": "lofracotestino.compress_quest_button",
+	"name": "Compress Quest Button",
+	"version": "v1.0.0",
+	"developer": "Lofracotestino",
+	"description": "CreatorLayer, but Better.",
+	"resources": {
+        "spritesheets": {
+            "TextureSheet": [
+                "resources/sheet/*.png"
+        	]
+		}
+	},
+	"settings": {
+		"enable-setting": {
+			"type": "bool",
+			"name": "Disable",
+			"default": false
+		},
+		"color-settings": {
+			"type": "title",
+			"name": "Color Settings",
+			"description": "Change the Color of Every Button!"
+		},
+		"quest-color-setting": {
+			"type": "string",
+			"name": "Color of Quest Button",
+			"default": "Green",
+			"one-of": ["Blue", "Cyan", "Dark Aqua", "Dark Purple", "Gray", "Green", "Pink"]
+		},
+		"saved-color-setting": {
+			"type": "string",
+			"name": "Color of Saved Button",
+			"default": "Green",
+			"one-of": ["Blue", "Cyan", "Dark Aqua", "Dark Purple", "Gray", "Green", "Pink"]
+		},
+		"gauntlet-color-setting": {
+			"type": "string",
+			"name": "Color of Gauntlets Button",
+			"default": "Green",
+			"one-of": ["Blue", "Cyan", "Dark Aqua", "Dark Purple", "Gray", "Green", "Pink"]
+		},
+		"mck-color-setting": {
+			"type": "string",
+			"name": "Color of Map Packs Button",
+			"default": "Green",
+			"one-of": ["Blue", "Cyan", "Dark Aqua", "Dark Purple", "Gray", "Green", "Pink"]
+		},
+		"paths-color-setting": {
+			"type": "string",
+			"name": "Color of Paths Button",
+			"default": "Green",
+			"one-of": ["Blue", "Cyan", "Dark Aqua", "Dark Purple", "Gray", "Green", "Pink"]
+		},
+		"gddp-color-setting": {
+			"type": "string",
+			"name": "Color of GDDP Button",
+			"default": "Green",
+			"one-of": ["Blue", "Cyan", "Dark Aqua", "Dark Purple", "Gray", "Green", "Pink"],
+			"enable-if": "saved:gddp-enabled",
+			"enable-if-description": "\"minemaker0430.gddp_integration\" has to be Enabled/Downloaded for this setting to take effect."
+		},
+		"timely-color-setting": {
+			"type": "string",
+			"name": "Color of Timely Button",
+			"default": "Green",
+			"one-of": ["Blue", "Cyan", "Dark Aqua", "Dark Purple", "Gray", "Green", "Pink"]
+		},
+		"extra-settings": {
+			"type": "title",
+			"name": "Extra Settings",
+			"description": "Settings that are Extra!!"
+		},
+		"button-sprite-size-setting": {
+			"type": "float",
+			"name": "Scroll Sprite Size",
+			"description": "Changes the size of the button sprite to your liking!",
+			"default": 0.75,
+			"min": 0.1,
+			"max": 1,
+			"control": {
+				"arrows": true,
+				"arrow-step": 0.05,
+				"big-arrows": false,
+				"slider": true,
+				"slider-step": 0.1,
+				"input": false
+			}
+		},
+		"actual-names": {
+			"type": "bool",
+			"name": "Alternate Timely Names",
+			"default": false
+		},
+		"stupid-gddp-sprite": {
+			"type": "bool",
+			"name": "Stupid GDDP Button Texture",
+			"default": false,
+			"enable-if": "saved:gddp-enabled",
+			"enable-if-description": "\"minemaker0430.gddp_integration\" has to be Enabled/Downloaded for this setting to take effect."
+		}
+	},
+	"tags": ["offline", "enhancement"]
+}
