@@ -8,7 +8,7 @@
 	},
 	"id": "lofracotestino.better_creator_layer",
 	"name": "Better CreatorLayer",
-	"version": "v1.0.3",
+	"version": "v1.1.0",
 	"developer": "Lofracotestino",
 	"description": "CreatorLayer, but Better.",
 	"resources": {
@@ -18,7 +18,6 @@
         	]
 		}
 	},
-	
 	"dependencies": [
 		{
 			"id": "geode.node-ids",
@@ -26,7 +25,6 @@
 			"importance": "required"
 		}
 	],
-	
 	"settings": {
 		"enable-setting": {
 			"type": "bool",
@@ -114,11 +112,18 @@
 			"default": false,
 			"enable-if": "saved:gddp-enabled",
 			"enable-if-description": "\"minemaker0430.gddp_integration\" has to be Enabled/Downloaded for this setting to take effect."
+		},
+		"flip-menus": {
+			"type": "bool",
+			"name": "Flip the Menus",
+			"default": false,
+			"description": "Flip the Menus the buttons are in."
+		},
+		"unhide-extra-buttons": {
+			"type": "bool",
+			"name": "Show Unused Buttons",
+			"default": false
 		}
 	},
 	"tags": ["offline", "enhancement"]
 }
-
-
-
-
