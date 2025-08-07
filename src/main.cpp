@@ -15,8 +15,6 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         }
     }
 
-    // ... Code
-
     struct Fields {
         CCMenuItem* m_originalQuestButton = nullptr;
     };
@@ -133,6 +131,16 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         originalPathsButton->setVisible(false);
         originalPathsButton = nullptr;
 
+        if (!Mod::get()->getSettingValue<bool>("unhide-extra-buttons")) {
+            auto mapBtn = creatorButtonsMenu->getChildByID("map-button");
+            mapBtn->setVisible(false);
+            mapBtn = nullptr;
+
+            auto vsBtn = creatorButtonsMenu->getChildByID("versus-button");
+            vsBtn->setVisible(false);
+            vsBtn = nullptr;
+        }
+
 		auto blCorner = this->getChildByID("bottom-left-corner");
 		blCorner->setVisible(false);
         blCorner = nullptr;
@@ -210,42 +218,48 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         auto winSize = CCDirector::sharedDirector()->getWinSize();
 
         if (auto bottomLeftMenu = this->getChildByID("bottom-left-menu")) {
-		bottomLeftMenu->addChild(newSavedButton);
-        bottomLeftMenu->addChild(timelyButton);
-        bottomLeftMenu->addChild(newGauntletButton);
-        bottomLeftMenu->addChild(newMckButton);
+            if (Mod::get()->getSettingValue<bool>("flip-menus")) {
+    		    bottomLeftMenu->addChild(newSavedButton);
+                bottomLeftMenu->addChild(timelyButton);
+                bottomLeftMenu->addChild(newGauntletButton);
+                bottomLeftMenu->addChild(newMckButton);
+                if (Loader::get()->isModLoaded("minemaker0430.gddp_integration")) {
+                    Mod::get()->setSavedValue("gddp-enabled", true);
 
-        if (Loader::get()->isModLoaded("minemaker0430.gddp_integration")) {
-            Mod::get()->setSavedValue("gddp-enabled", true);
+                    auto originalGddpNode = creatorButtonsMenu->getChildByID("demon-progression-button");
+                    auto originalGddpButton = static_cast<CCMenuItemSpriteExtra*>(originalGddpNode);
+                    originalGddpButton->setVisible(false);
 
-            auto originalGddpNode = creatorButtonsMenu->getChildByID("demon-progression-button");
-            auto originalGddpButton = static_cast<CCMenuItemSpriteExtra*>(originalGddpNode);
-            originalGddpButton->setVisible(false);
+                    auto gddpButtonColor = Mod::get()->getSettingValue<std::string>("gddp-color-setting");
+                    CircleBaseColor gddpButtonColorV = getColor(gddpButtonColor);
 
-            auto gddpButtonColor = Mod::get()->getSettingValue<std::string>("gddp-color-setting");
-            CircleBaseColor gddpButtonColorV = getColor(gddpButtonColor);
+                    CircleButtonSprite* gddpButtonSprite;
 
-            CircleButtonSprite* gddpButtonSprite;
+                    if (!Mod::get()->getSettingValue<bool>("stupid-gddp-sprite")) {
+                        gddpButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_gddpSprite.png"_spr, Mod::get()->getSettingValue<double>("button-sprite-size-setting") + 0.29f, gddpButtonColorV, CircleBaseSize::SmallAlt);
+                    } else {
+                        gddpButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_stupidGddpSprite.png"_spr, Mod::get()->getSettingValue<double>("button-sprite-size-setting") + 0.25f, gddpButtonColorV, CircleBaseSize::SmallAlt);
+                    }
 
-            if (!Mod::get()->getSettingValue<bool>("stupid-gddp-sprite")) {
-                gddpButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_gddpSprite.png"_spr, Mod::get()->getSettingValue<double>("button-sprite-size-setting") + 0.29f, gddpButtonColorV, CircleBaseSize::SmallAlt);
+                    auto newGddpButton = CCMenuItemSpriteExtra::create(
+                        gddpButtonSprite,
+                        this,
+                        originalGddpButton->m_pfnSelector
+                    );
+
+                    newGddpButton->setID("new-demon-progression-button");
+
+                    bottomLeftMenu->addChild(newGddpButton);
+                }
             } else {
-                gddpButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_stupidGddpSprite.png"_spr, Mod::get()->getSettingValue<double>("button-sprite-size-setting") + 0.25f, gddpButtonColorV, CircleBaseSize::SmallAlt);
+                bottomLeftMenu->addChild(newQuestButton);
+                bottomLeftMenu->addChild(newPathsButton);
             }
 
-            auto newGddpButton = CCMenuItemSpriteExtra::create(
-                gddpButtonSprite,
-                this,
-                originalGddpButton->m_pfnSelector
-            );
-
-            newGddpButton->setID("new-demon-progression-button");
-
-            bottomLeftMenu->addChild(newGddpButton);
-        }
-			bottomLeftMenu->setContentSize({bottomLeftMenu->getContentWidth(), 200.0f});
-			bottomLeftMenu->updateLayout();
-	}
+            AxisLayout* bLMLayout = static_cast<AxisLayout*>(bottomLeftMenu->getLayout());
+            bLMLayout->setAutoGrowAxis(true);
+		    bottomLeftMenu->updateLayout();
+	    }
 		
         AxisLayout* bottomMenuLayout = AxisLayout::create(Axis::Row);
         bottomMenuLayout->setAxisAlignment(AxisAlignment::Center);
@@ -254,8 +268,44 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
 
         auto bottomMenu = CCMenu::create();
         bottomMenu->setID("bottom-menu"_spr);
-        bottomMenu->addChild(newQuestButton);
-        bottomMenu->addChild(newPathsButton);
+
+        if (Mod::get()->getSettingValue<bool>("flip-menus")) {
+            bottomMenu->addChild(newQuestButton);
+            bottomMenu->addChild(newPathsButton);
+        } else {
+            bottomMenu->addChild(newSavedButton);
+            bottomMenu->addChild(timelyButton);
+            bottomMenu->addChild(newGauntletButton);
+            bottomMenu->addChild(newMckButton);
+            if (Loader::get()->isModLoaded("minemaker0430.gddp_integration")) {
+                Mod::get()->setSavedValue("gddp-enabled", true);
+                auto originalGddpNode = creatorButtonsMenu->getChildByID("demon-progression-button");
+                auto originalGddpButton = static_cast<CCMenuItemSpriteExtra*>(originalGddpNode);
+
+                originalGddpButton->setVisible(false);
+
+                auto gddpButtonColor = Mod::get()->getSettingValue<std::string>("gddp-color-setting");
+                CircleBaseColor gddpButtonColorV = getColor(gddpButtonColor);
+
+                CircleButtonSprite* gddpButtonSprite;
+
+                if (!Mod::get()->getSettingValue<bool>("stupid-gddp-sprite")) {
+                    gddpButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_gddpSprite.png"_spr, Mod::get()->getSettingValue<double>("button-sprite-size-setting") + 0.29f, gddpButtonColorV, CircleBaseSize::SmallAlt);
+                } else {
+                    gddpButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_stupidGddpSprite.png"_spr, Mod::get()->getSettingValue<double>("button-sprite-size-setting") + 0.25f, gddpButtonColorV, CircleBaseSize::SmallAlt);
+                }
+
+                auto newGddpButton = CCMenuItemSpriteExtra::create(
+                    gddpButtonSprite,
+                    this,
+                    originalGddpButton->m_pfnSelector
+                );
+
+                newGddpButton->setID("new-demon-progression-button");
+                bottomMenu->addChild(newGddpButton);
+            }
+        }
+
         this->addChild(bottomMenu);
 
         bottomMenu->setAnchorPoint({0.5f, 0.0f});
@@ -263,13 +313,13 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         bottomMenu->setLayout(bottomMenuLayout, true);
 
         creatorButtonsMenu->setScale(1.5f);
-        creatorButtonsMenu->setContentSize({300.0f, 130.0f});
+        creatorButtonsMenu->setContentSize({260.0f, 130.0f});
         creatorButtonsMenu->updateLayout();
 
         return true;
-    }
 
-};
+        };
+    };
 
 
 
