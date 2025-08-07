@@ -257,7 +257,7 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         this->addChild(bottomLeftMenu);
 
         bottomLeftMenu->setAnchorPoint({0.5f, 0.0f});
-        bottomLeftMenu->setPosition(winSize.width - 543.0f, positionOffset);
+        bottomLeftMenu->setPosition(30, positionOffset);
         bottomLeftMenu->setLayout(bottomLeftMenuLayout, true);
 
         AxisLayout* bottomMenuLayout = AxisLayout::create(Axis::Row);
@@ -281,4 +281,5 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
 
         return true;
     }
+
 };
