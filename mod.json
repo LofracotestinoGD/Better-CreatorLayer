@@ -6,8 +6,8 @@
 		"mac": "2.2074",
 		"ios": "2.2074"
 	},
-	"id": "lofracotestino.compress_quest_button",
-	"name": "Compress Quest Button",
+	"id": "lofracotestino.better_creator_layer",
+	"name": "Better CreatorLayer",
 	"version": "v1.0.2",
 	"developer": "Lofracotestino",
 	"description": "CreatorLayer, but Better.",
@@ -109,4 +109,5 @@
 	},
 	"tags": ["offline", "enhancement"]
 }
+
 
