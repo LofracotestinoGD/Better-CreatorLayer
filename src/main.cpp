@@ -243,7 +243,7 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
 
             bottomLeftMenu->addChild(newGddpButton);
         }
-
+			bottomLeftMenu->setContentSize({bottomLeftMenu->getContentWidth(), 200.0f});
 			bottomLeftMenu->updateLayout();
 	}
 		
@@ -270,5 +270,6 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
     }
 
 };
+
 
 
