@@ -7,10 +7,10 @@
 		"ios": "2.2074"
 	},
 	"id": "lofracotestino.better_creator_layer",
-	"name": "Better CreatorLayer",
+	"name": "Reworked Creator Layer",
 	"version": "v1.2.3",
 	"developer": "Lofracotestino",
-	"description": "CreatorLayer, but Better.",
+	"description": "Moves around some buttons and compacts some of them in the Creator Layer.",
 	"resources": {
         "spritesheets": {
             "TextureSheet": [
@@ -138,5 +138,6 @@
 	},
 	"tags": ["offline", "interface"]
 }
+
 
 
