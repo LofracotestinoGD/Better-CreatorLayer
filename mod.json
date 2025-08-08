@@ -7,10 +7,10 @@
 		"ios": "2.2074"
 	},
 	"id": "lofracotestino.better_creator_layer",
-	"name": "Reworked Creator Menu",
-	"version": "v1.2.3",
+	"name": "Better CreatorLayer",
+	"version": "v1.2.2",
 	"developer": "Lofracotestino",
-	"description": "Moves Around some buttons in the creator menu.",
+	"description": "CreatorLayer, but Better.",
 	"resources": {
         "spritesheets": {
             "TextureSheet": [
@@ -26,6 +26,13 @@
 			"version": ">=v1.0.0",
             "importance": "conflicting"
 		}
+	},
+	"links": {
+		"source": "https://github.com/LofracotestinoGD/Better-CreatorLayer"
+	},
+	"issues": {
+		"url": "https://github.com/LofracotestinoGD/Better-CreatorLayer/issues",
+		"info": "You can add issues on the following link to let me know."
 	},
 	"settings": {
 		"enable-setting": {
@@ -129,8 +136,6 @@
 			"default": false
 		}
 	},
-	"tags": ["offline", "enhancement"]
+	"tags": ["offline", "interface"]
 }
-
-
 
