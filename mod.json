@@ -8,9 +8,9 @@
 	},
 	"id": "lofracotestino.better_creator_layer",
 	"name": "Reworked Creator Layer",
-	"version": "v1.2.3",
+	"version": "v1.3.0",
 	"developer": "Lofracotestino",
-	"description": "Moves around some buttons and compacts some of them in the Creator Layer.",
+	"description": "reworks some buttons in the Creator Layer.",
 	"resources": {
         "spritesheets": {
             "TextureSheet": [

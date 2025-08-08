@@ -1,6 +1,7 @@
 #include <Geode/Geode.hpp>
 #include <Geode/ui/BasedButtonSprite.hpp>
 #include <Geode/modify/CreatorLayer.hpp>
+#include <Geode/modify/ChallengesPage.hpp>
 #include <Geode/ui/Layout.hpp>
 #include <Geode/ui/Popup.hpp>
 #include "TimelyLayer.hpp"
@@ -17,6 +18,7 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
 
     struct Fields {
         CCMenuItemSpriteExtra* m_originalQuestButton = nullptr;
+        CCMenuItemSpriteExtra* m_QuestBtn = nullptr;
     };
 
     void onExit() {
@@ -93,6 +95,8 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
             menu_selector(BetterCreatorLayer::onNewChallenge)
         );
 
+        m_fields->m_QuestBtn = newQuestButton;
+
         auto newSavedButton = CCMenuItemSpriteExtra::create(
             savedButtonSprite,
             this,
@@ -130,6 +134,24 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         newGauntletButton->setID("new-gauntlets-button"_spr);
         newMapPacksButton->setID("new-map-packs-button"_spr);
         newPathsButton->setID("new-paths-button"_spr);
+
+        int questsCompleted = 0;
+        for (int i = 1; i <= 3; i++) {
+            if (auto challenge = GameStatsManager::sharedState()->getChallenge(i)) {
+                if (challenge->m_canClaim) questsCompleted++;
+            }
+        }
+
+		auto questNotification = CCSprite::createWithSpriteFrameName("exMark_001.png");
+		questNotification->setScale(0.55f);
+		questNotification->setVisible(false);
+		questNotification->setPosition(newQuestButton->getContentSize() - ccp(8.0f,9.0f));
+		questNotification->setID("quest-notification");
+		newQuestButton->addChild(questNotification);
+		
+		if (questsCompleted > 0) {
+			questNotification->setVisible(true);
+		}
         
         bool flipMenus = Mod::get()->getSettingValue<bool>("flip-menus");
         
@@ -235,6 +257,30 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
 
         };
     };
+
+class $modify(myChallengesPage, ChallengesPage) {
+    void claimItem(ChallengeNode* node, GJChallengeItem* item, cocos2d::CCPoint point) {
+        ChallengesPage::claimItem(node, item, point);
+
+        if (auto layer = CCDirector::sharedDirector()->getRunningScene()->getChildByType<CreatorLayer>(0)) {
+            if (CCMenuItemSpriteExtra* button = as<BetterCreatorLayer*>(layer)->m_fields->m_originalQuestButton) {
+                auto questNotification = as<BetterCreatorLayer*>(layer)->m_fields->m_QuestBtn->getChildByID("quest-notification");
+                bool claimable = false;
+    				
+                for (int i = 1; i <= 3; i++) {
+					if (auto challenge = GameStatsManager::sharedState()->getChallenge(i)) {
+						if (challenge->m_canClaim) {
+							claimable = true;
+							break;
+						}
+					}
+				}
+
+                questNotification->setVisible(claimable);
+            }
+        }
+    }
+};
 
 
 

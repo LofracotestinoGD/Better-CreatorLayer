@@ -37,3 +37,6 @@
 # 1.2.3
 - Rebranded
 
+# 1.3.0
+- Added notification for unclaimed quests on quests button.
+
