@@ -18,13 +18,9 @@
         	]
 		}
 	},
-	"dependencies": [
-		{
-			"id": "geode.node-ids",
-			"version": ">=1.20.0",
-			"importance": "required"
-		}
-	],
+    "dependencies": {
+        "geode.node-ids": ">=v1.21.0"
+    },
 	"settings": {
 		"enable-setting": {
 			"type": "bool",
@@ -129,5 +125,4 @@
 	},
 	"tags": ["offline", "enhancement"]
 }
-
 
