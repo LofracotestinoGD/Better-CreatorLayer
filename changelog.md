@@ -15,3 +15,9 @@
 
 # 1.1.0
 - Added Suggestions from Alphalaneous!
+
+# 1.1.1
+- Fixed crash when entering CreatorLayer if GDDP Mod option "compact-button" is enabled.
+
+# 1.1.2
+- Fixed crash when entering CreatorLayer if GDDP Mod option "replace-map-packs" is enabled
