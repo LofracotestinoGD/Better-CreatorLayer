@@ -8,7 +8,7 @@
 	},
 	"id": "lofracotestino.better_creator_layer",
 	"name": "Better CreatorLayer",
-	"version": "v1.2.0",
+	"version": "v1.2.1",
 	"developer": "Lofracotestino",
 	"description": "CreatorLayer, but Better.",
 	"resources": {
@@ -125,4 +125,5 @@
 	},
 	"tags": ["offline", "enhancement"]
 }
+
 
