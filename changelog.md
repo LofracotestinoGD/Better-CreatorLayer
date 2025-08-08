@@ -30,3 +30,6 @@
 
 # 1.2.1
 - Maybe a fix idk
+
+# 1.2.2
+- We are so Back
