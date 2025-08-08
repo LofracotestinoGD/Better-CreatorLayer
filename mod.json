@@ -8,7 +8,7 @@
 	},
 	"id": "lofracotestino.better_creator_layer",
 	"name": "Better CreatorLayer",
-	"version": "v1.2.1",
+	"version": "v1.2.2",
 	"developer": "Lofracotestino",
 	"description": "CreatorLayer, but Better.",
 	"resources": {
@@ -21,6 +21,12 @@
     "dependencies": {
         "geode.node-ids": ">=v1.21.0"
     },
+	"incompatibilities": {
+		"capeling.goodbye_unnecessary_buttons": {
+			"version": ">=v1.0.0",
+            "importance": "conflicting"
+		}
+	},
 	"settings": {
 		"enable-setting": {
 			"type": "bool",
@@ -125,5 +131,4 @@
 	},
 	"tags": ["offline", "enhancement"]
 }
-
 
