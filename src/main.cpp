@@ -36,8 +36,8 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
     }
 
 
-    CircleBaseColor getColor(std::string_view setting) {
-        std::string_view colorStr = Mod::get()->getSettingValue<std::string>(setting);
+    CircleBaseColor getColor(std::string setting) {
+        std::string colorStr = Mod::get()->getSettingValue<std::string>(setting);
         if      (colorStr == "Green")       return CircleBaseColor::Green;
         else if (colorStr == "Cyan")        return CircleBaseColor::Cyan;
         else if (colorStr == "Dark Aqua")   return CircleBaseColor::DarkAqua;
@@ -163,7 +163,7 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
                 if (Mod::get()->getSettingValue<bool>("stupid-gddp-sprite"))
                     newGDDPIButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_stupidGddpSprite.png"_spr, buttonSize + 0.25f, getColor("gddp-color-setting"), CircleBaseSize::SmallAlt);
                 else
-                    newGDDPIButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_gddpSprite.png"_spr, buttonSize + 0.29f, getColor("gddp-color-setting"), CircleBaseSize::SmallAlt);
+                    newGDDPIButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_gddpSprite.png"_spr, buttonSize + 0.3f, getColor("gddp-color-setting"), CircleBaseSize::SmallAlt);
 
                 CCMenuItemSpriteExtra* newGDDPIButton = CCMenuItemSpriteExtra::create(
                     newGDDPIButtonSprite,
@@ -174,6 +174,29 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
                 newGDDPIButton->setID("new-demon-progression-button"_spr);
 
                 menu1->addChild(newGDDPIButton);
+            }
+
+            CCMenuItemSpriteExtra* originalGDRButton = static_cast<CCMenuItemSpriteExtra*>(creatorButtonsMenu->getChildByID("spaghettdev.gd-roulette/roulette-button"));
+            CCNode* centerLeftMenu = nullptr;
+
+            if (!originalGDRButton) {
+                centerLeftMenu = getChildByID("spaghettdev.gd-roulette/center-left-menu");
+                originalGDRButton = static_cast<CCMenuItemSpriteExtra*>(centerLeftMenu->getChildByID("spaghettdev.gd-roulette/roulette-button"));
+            }
+            if (originalGDRButton) {
+                originalGDRButton->setVisible(false);
+
+                auto newGDRButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_GDRSprite.png"_spr, buttonSize + 0.25f, getColor("gdr-color-setting"), CircleBaseSize::SmallAlt);
+
+                CCMenuItemSpriteExtra* newGDRButton = CCMenuItemSpriteExtra::create(
+                    newGDRButtonSprite,
+                    this,
+                    originalGDRButton->m_pfnSelector
+                );
+
+                newGDRButton->setID("new-roulette-button"_spr);
+
+                menu1->addChild(newGDRButton);
             }
         }
 
@@ -186,7 +209,7 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         auto winSize = CCDirector::sharedDirector()->getWinSize();
         
         if (bottomLeftMenu) {
-            static_cast<AxisLayout*>(bottomLeftMenu->getLayout())->setAutoGrowAxis(true);
+            bottomLeftMenu->setContentHeight(240.0f);
             bottomLeftMenu->updateLayout();
         }
         int positionOffset = 7;
@@ -198,6 +221,7 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         addChild(bottomMenu);
         bottomMenu->setAnchorPoint({0.5f, 0.0f});
         bottomMenu->setPosition(winSize.width / 2, positionOffset);
+        bottomMenu->setContentWidth(400.0f);
         bottomMenu->setLayout(bottomMenuLayout, true);
 
         creatorButtonsMenu->setScale(1.5f);
@@ -208,7 +232,6 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
 
         };
     };
-
 
 
 
