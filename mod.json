@@ -70,9 +70,13 @@
 			"type": "string",
 			"name": "Color of GDDP Button",
 			"default": "Green",
-			"one-of": ["Blue", "Cyan", "Dark Aqua", "Dark Purple", "Gray", "Green", "Pink"],
-			"enable-if": "saved:gddp-enabled",
-			"enable-if-description": "\"minemaker0430.gddp_integration\" has to be Enabled/Downloaded for this setting to take effect."
+			"one-of": ["Blue", "Cyan", "Dark Aqua", "Dark Purple", "Gray", "Green", "Pink"]
+		},
+		"gdr-color-setting": {
+			"type": "string",
+			"name": "Color of GD-Roulette Button",
+			"default": "Green",
+			"one-of": ["Blue", "Cyan", "Dark Aqua", "Dark Purple", "Gray", "Green", "Pink"]
 		},
 		"timely-color-setting": {
 			"type": "string",
@@ -109,9 +113,7 @@
 		"stupid-gddp-sprite": {
 			"type": "bool",
 			"name": "Stupid GDDP Button Texture",
-			"default": false,
-			"enable-if": "saved:gddp-enabled",
-			"enable-if-description": "\"minemaker0430.gddp_integration\" has to be Enabled/Downloaded for this setting to take effect."
+			"default": false
 		},
 		"flip-menus": {
 			"type": "bool",
@@ -127,5 +129,4 @@
 	},
 	"tags": ["offline", "enhancement"]
 }
-
 
