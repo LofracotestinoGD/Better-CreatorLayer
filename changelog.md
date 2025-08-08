@@ -28,3 +28,5 @@
 # 1.2.0
 - Added GD-Roulette Compatability
 
+# 1.2.1
+- Maybe a fix idk
