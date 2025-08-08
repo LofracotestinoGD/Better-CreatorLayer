@@ -6,11 +6,11 @@
 		"mac": "2.2074",
 		"ios": "2.2074"
 	},
-	"id": "lofracotestino.better_creator_layer",
-	"name": "Better CreatorLayer",
-	"version": "v1.2.2",
+	"id": "lofracotestino.reworked_creator_menu",
+	"name": "Reworked Creator Menu",
+	"version": "v1.2.3",
 	"developer": "Lofracotestino",
-	"description": "CreatorLayer, but Better.",
+	"description": "Moves Around some buttons in the creator menu.",
 	"resources": {
         "spritesheets": {
             "TextureSheet": [
@@ -131,4 +131,5 @@
 	},
 	"tags": ["offline", "enhancement"]
 }
+
 
