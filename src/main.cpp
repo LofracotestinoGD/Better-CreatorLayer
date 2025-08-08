@@ -133,8 +133,8 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         
         bool flipMenus = Mod::get()->getSettingValue<bool>("flip-menus");
         
-        CCMenu* bottomMenu = CCMenu::create();
-        CCMenu* bottomLeftMenu = this->getChildByID("bottom-left-menu");
+        auto bottomMenu = CCMenu::create();
+        auto bottomLeftMenu = this->getChildByID("bottom-left-menu");
         auto menu1 = flipMenus ? bottomLeftMenu : bottomMenu;
         auto menu2 = flipMenus ? bottomMenu : bottomLeftMenu;
 
@@ -208,6 +208,7 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
 
         };
     };
+
 
 
 
