@@ -228,7 +228,18 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
 
                     auto originalGddpNode = creatorButtonsMenu->getChildByID("demon-progression-button");
                     auto originalGddpButton = static_cast<CCMenuItemSpriteExtra*>(originalGddpNode);
+                    CCNode* centerRightMenu = getChildByID("minemaker0430.gddp_integration/center-right-menu");
+                    if (!centerRightMenu) centerRightMenu = getChildByID("cvolton.betterinfo/center-right-menu");
+                    if (!originalGddpButton && centerRightMenu) {
+                      originalGddpButton = static_cast<CCMenuItemSpriteExtra*>(centerRightMenu->getChildByID("demon-progression-button"));
+                    }
+
                     originalGddpButton->setVisible(false);
+                    if (centerRightMenu) {
+                      geode::Layout* layout = centerRightMenu->getLayout();
+                      if (layout) layout->ignoreInvisibleChildren(true);
+                      centerRightMenu->updateLayout();
+                    }
 
                     auto gddpButtonColor = Mod::get()->getSettingValue<std::string>("gddp-color-setting");
                     CircleBaseColor gddpButtonColorV = getColor(gddpButtonColor);
@@ -281,8 +292,18 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
                 Mod::get()->setSavedValue("gddp-enabled", true);
                 auto originalGddpNode = creatorButtonsMenu->getChildByID("demon-progression-button");
                 auto originalGddpButton = static_cast<CCMenuItemSpriteExtra*>(originalGddpNode);
+                CCNode* centerRightMenu = getChildByID("minemaker0430.gddp_integration/center-right-menu");
+                if (!centerRightMenu) centerRightMenu = getChildByID("cvolton.betterinfo/center-right-menu");
+                if (!originalGddpButton && centerRightMenu) {
+                  originalGddpButton = static_cast<CCMenuItemSpriteExtra*>(centerRightMenu->getChildByID("demon-progression-button"));
+                }
 
                 originalGddpButton->setVisible(false);
+                if (centerRightMenu) {
+                  geode::Layout* layout = centerRightMenu->getLayout();
+                  if (layout) layout->ignoreInvisibleChildren(true);
+                  centerRightMenu->updateLayout();
+                }
 
                 auto gddpButtonColor = Mod::get()->getSettingValue<std::string>("gddp-color-setting");
                 CircleBaseColor gddpButtonColorV = getColor(gddpButtonColor);
