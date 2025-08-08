@@ -21,3 +21,7 @@
 
 # 1.1.2
 - Fixed crash when entering CreatorLayer if GDDP Mod option "replace-map-packs" is enabled
+
+# 1.1.3
+- (almost) Complete code rework (Thanks NyteLyte!!)
+
