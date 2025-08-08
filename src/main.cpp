@@ -82,7 +82,7 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         
         auto questButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_challengeSprite.png"_spr, buttonSize, getColor("quest-color-setting"), CircleBaseSize::SmallAlt);
         auto savedButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_savedSprite.png"_spr, buttonSize + 0.15f, getColor("saved-color-setting"), CircleBaseSize::SmallAlt);
-        auto timelyButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_timeIcon_001.png", buttonSize + 0.15f, getColor("timely-color-setting"), CircleBaseSize::SmallAlt);
+        auto timelyButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_timelySprite.png"_spr, buttonSize + 0.15f, getColor("timely-color-setting"), CircleBaseSize::SmallAlt);
         auto gauntletButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_gauntletSprite.png"_spr, buttonSize + 0.15f, getColor("gauntlet-color-setting"), CircleBaseSize::SmallAlt);
         auto mapPacksButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_mapPackSprite.png"_spr, buttonSize + 0.2f, getColor("mck-color-setting"), CircleBaseSize::SmallAlt);
         auto pathsButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_pathsSprite.png"_spr, buttonSize + 0.2f, getColor("paths-color-setting"), CircleBaseSize::SmallAlt);
@@ -143,60 +143,63 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
             menu1->addChild(timelyButton);
             menu1->addChild(newGauntletButton);
             menu1->addChild(newMapPacksButton);
-            // option 1: non-compact button
-            CCMenuItemSpriteExtra* originalGDDPIButton = static_cast<CCMenuItemSpriteExtra*>(creatorButtonsMenu->getChildByID("demon-progression-button"));
-            CCNode* centerRightMenu = nullptr;
-            // option 2: compact button
-            if (!originalGDDPIButton) {
-                centerRightMenu = getChildByID("minemaker0430.gddp_integration/center-right-menu");
-                if (!centerRightMenu) centerRightMenu = getChildByID("cvolton.betterinfo/center-right-menu");
-                originalGDDPIButton = static_cast<CCMenuItemSpriteExtra*>(centerRightMenu->getChildByID("demon-progression-button"));
-            }
-            if (originalGDDPIButton) {
-                originalGDDPIButton->setVisible(false);
-                if (centerRightMenu) {
-                  geode::Layout* layout = centerRightMenu->getLayout();
-                  if (layout) layout->ignoreInvisibleChildren(true);
-                  centerRightMenu->updateLayout();
+            if (Loader::get()->isModLoaded("minemaker0430.gddp_integration")) {
+                // option 1: non-compact button
+                CCMenuItemSpriteExtra* originalGDDPIButton = static_cast<CCMenuItemSpriteExtra*>(creatorButtonsMenu->getChildByID("demon-progression-button"));
+                CCNode* centerRightMenu = nullptr;
+                // option 2: compact button
+                if (!originalGDDPIButton) {
+                    centerRightMenu = getChildByID("minemaker0430.gddp_integration/center-right-menu");
+                    if (!centerRightMenu) centerRightMenu = getChildByID("cvolton.betterinfo/center-right-menu");
+                    originalGDDPIButton = static_cast<CCMenuItemSpriteExtra*>(centerRightMenu->getChildByID("demon-progression-button"));
                 }
-                CircleButtonSprite* newGDDPIButtonSprite;
-                if (Mod::get()->getSettingValue<bool>("stupid-gddp-sprite"))
-                    newGDDPIButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_stupidGddpSprite.png"_spr, buttonSize + 0.25f, getColor("gddp-color-setting"), CircleBaseSize::SmallAlt);
-                else
-                    newGDDPIButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_gddpSprite.png"_spr, buttonSize + 0.3f, getColor("gddp-color-setting"), CircleBaseSize::SmallAlt);
+                if (originalGDDPIButton) {
+                    originalGDDPIButton->setVisible(false);
+                    if (centerRightMenu) {
+                      geode::Layout* layout = centerRightMenu->getLayout();
+                      if (layout) layout->ignoreInvisibleChildren(true);
+                      centerRightMenu->updateLayout();
+                    }
+                    CircleButtonSprite* newGDDPIButtonSprite;
+                    if (Mod::get()->getSettingValue<bool>("stupid-gddp-sprite"))
+                        newGDDPIButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_stupidGddpSprite.png"_spr, buttonSize + 0.25f, getColor("gddp-color-setting"), CircleBaseSize::SmallAlt);
+                    else
+                        newGDDPIButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_gddpSprite.png"_spr, buttonSize + 0.3f, getColor("gddp-color-setting"), CircleBaseSize::SmallAlt);
 
-                CCMenuItemSpriteExtra* newGDDPIButton = CCMenuItemSpriteExtra::create(
-                    newGDDPIButtonSprite,
-                    this,
-                    originalGDDPIButton->m_pfnSelector
-                );
+                    CCMenuItemSpriteExtra* newGDDPIButton = CCMenuItemSpriteExtra::create(
+                        newGDDPIButtonSprite,
+                        this,
+                        originalGDDPIButton->m_pfnSelector
+                    );
 
-                newGDDPIButton->setID("new-demon-progression-button"_spr);
+                    newGDDPIButton->setID("new-demon-progression-button"_spr);
 
-                menu1->addChild(newGDDPIButton);
+                    menu1->addChild(newGDDPIButton);
+                }
             }
+            if (Loader::get()->isModLoaded("spaghettdev.gd-roulette")) {
+                CCMenuItemSpriteExtra* originalGDRButton = static_cast<CCMenuItemSpriteExtra*>(creatorButtonsMenu->getChildByID("spaghettdev.gd-roulette/roulette-button"));
+                CCNode* centerLeftMenu = nullptr;
 
-            CCMenuItemSpriteExtra* originalGDRButton = static_cast<CCMenuItemSpriteExtra*>(creatorButtonsMenu->getChildByID("spaghettdev.gd-roulette/roulette-button"));
-            CCNode* centerLeftMenu = nullptr;
+                if (!originalGDRButton) {
+                    centerLeftMenu = getChildByID("spaghettdev.gd-roulette/center-left-menu");
+                    originalGDRButton = static_cast<CCMenuItemSpriteExtra*>(centerLeftMenu->getChildByID("spaghettdev.gd-roulette/roulette-button"));
+                }
+                if (originalGDRButton) {
+                    originalGDRButton->setVisible(false);
 
-            if (!originalGDRButton) {
-                centerLeftMenu = getChildByID("spaghettdev.gd-roulette/center-left-menu");
-                originalGDRButton = static_cast<CCMenuItemSpriteExtra*>(centerLeftMenu->getChildByID("spaghettdev.gd-roulette/roulette-button"));
-            }
-            if (originalGDRButton) {
-                originalGDRButton->setVisible(false);
+                    auto newGDRButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_GDRSprite.png"_spr, buttonSize + 0.25f, getColor("gdr-color-setting"), CircleBaseSize::SmallAlt);
 
-                auto newGDRButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_GDRSprite.png"_spr, buttonSize + 0.25f, getColor("gdr-color-setting"), CircleBaseSize::SmallAlt);
+                    CCMenuItemSpriteExtra* newGDRButton = CCMenuItemSpriteExtra::create(
+                        newGDRButtonSprite,
+                        this,
+                        originalGDRButton->m_pfnSelector
+                    );
 
-                CCMenuItemSpriteExtra* newGDRButton = CCMenuItemSpriteExtra::create(
-                    newGDRButtonSprite,
-                    this,
-                    originalGDRButton->m_pfnSelector
-                );
+                    newGDRButton->setID("new-roulette-button"_spr);
 
-                newGDRButton->setID("new-roulette-button"_spr);
-
-                menu1->addChild(newGDRButton);
+                    menu1->addChild(newGDRButton);
+                }
             }
         }
 
@@ -224,15 +227,14 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         bottomMenu->setContentWidth(400.0f);
         bottomMenu->setLayout(bottomMenuLayout, true);
 
-        creatorButtonsMenu->setContentSize({300.0f, 135.0f});
         creatorButtonsMenu->setScale(1.5f);
+        creatorButtonsMenu->setContentSize({260.0f, 130.0f});
         creatorButtonsMenu->updateLayout();
 
         return true;
 
         };
     };
-
 
 
 
