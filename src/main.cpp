@@ -16,7 +16,7 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
     }
 
     struct Fields {
-        CCMenuItem* m_originalQuestButton = nullptr;
+        CCMenuItemSpriteExtra* m_originalQuestButton = nullptr;
     };
 
     void onExit() {
@@ -31,57 +31,21 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         CreatorLayer::onChallenge(m_fields->m_originalQuestButton);
     }
 
-    void onNewSavedLevels(CCObject* sender) {
-        CreatorLayer::onSavedLevels(sender);
-    }
-
     void onTimely(CCObject*) {
         TimelyLayer::create(this)->show();
     }
 
-    void onNewGauntlets(CCObject* sender) {
-        CreatorLayer::onGauntlets(sender);
-    }
 
-    void onNewMapPacks(CCObject* sender) {
-        CreatorLayer::onMapPacks(sender);
-    }
-
-    void onNewPaths(CCObject* sender) {
-        CreatorLayer::onPaths(sender);
-    }
-
-    CircleBaseColor getColor(std::string colorStr) {
-        CircleBaseColor buttonColor = CircleBaseColor::Green;
-        if (colorStr == "Green") {
-            buttonColor = CircleBaseColor::Green;
-        }
-        else if (colorStr == "Cyan")
-        {
-            buttonColor = CircleBaseColor::Cyan;
-        }
-        else if (colorStr == "Dark Aqua")
-        {
-            buttonColor = CircleBaseColor::DarkAqua;
-        }
-        else if (colorStr == "Dark Purple")
-        {
-            buttonColor = CircleBaseColor::DarkPurple;
-        }
-        else if (colorStr == "Gray")
-        {
-            buttonColor = CircleBaseColor::Gray;
-        }
-        else if (colorStr == "Pink")
-        {
-            buttonColor = CircleBaseColor::Pink;
-        }
-        else if (colorStr == "Blue")
-        {
-            buttonColor = CircleBaseColor::Blue;
-        }
-
-        return buttonColor;
+    CircleBaseColor getColor(std::string_view setting) {
+        std::string_view colorStr = Mod::get()->getSettingValue<std::string>(setting);
+        if      (colorStr == "Green")       return CircleBaseColor::Green;
+        else if (colorStr == "Cyan")        return CircleBaseColor::Cyan;
+        else if (colorStr == "Dark Aqua")   return CircleBaseColor::DarkAqua;
+        else if (colorStr == "Dark Purple") return CircleBaseColor::DarkPurple;
+        else if (colorStr == "Gray")        return CircleBaseColor::Gray;
+        else if (colorStr == "Pink")        return CircleBaseColor::Pink;
+        else if (colorStr == "Blue")        return CircleBaseColor::Blue;
+        else                                return CircleBaseColor::Green;
     }
 
     bool init() {
@@ -91,89 +55,37 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
             return true;
         }
 
-        Mod::get()->setSavedValue("gddp-enabled", false);
-        int positionOffset = 7;
+        CCNode* creatorButtonsMenu = this->getChildByID("creator-buttons-menu");
+        static_cast<AxisLayout*>(creatorButtonsMenu->getLayout())->ignoreInvisibleChildren(true);
+    
 
-		auto creatorButtonsMenu = this->getChildByID("creator-buttons-menu");
-        auto layout = typeinfo_cast<AxisLayout*>(creatorButtonsMenu->getLayout());
-        layout->ignoreInvisibleChildren(true);
+        m_fields->m_originalQuestButton = static_cast<CCMenuItemSpriteExtra*>(creatorButtonsMenu->getChildByID("quests-button"));
+        m_fields->m_originalQuestButton->setVisible(false);
 
-        auto originalSavedButton = creatorButtonsMenu->getChildByID("saved-button");
-        originalSavedButton->setVisible(false);
-        originalSavedButton = nullptr;
+#define HIDE_BUTTON(name) if (CCNode* originalButton = creatorButtonsMenu->getChildByID(name)) originalButton->setVisible(false)
+        HIDE_BUTTON("saved-button");
+        HIDE_BUTTON("daily-button");
+        HIDE_BUTTON("weekly-button");
+        HIDE_BUTTON("event-button");
+        HIDE_BUTTON("gauntlets-button");
+        HIDE_BUTTON("map-packs-button");
+        HIDE_BUTTON("paths-button");
+        if (!Mod::get()->getSettingValue<bool>("unhide-extra-buttons")) { HIDE_BUTTON("map-button"); HIDE_BUTTON("versus-button"); }
+#undef HIDE_BUTTON
 
-		auto originalQuestButton = creatorButtonsMenu->getChildByID("quests-button");
-        m_fields->m_originalQuestButton = typeinfo_cast<CCMenuItem*>(originalQuestButton);
-        originalQuestButton->setVisible(false);
-        originalQuestButton = nullptr;
-
-        auto originalDailyButton = creatorButtonsMenu->getChildByID("daily-button");
-        originalDailyButton->setVisible(false);
-        originalDailyButton = nullptr;
-
-        auto originalWeeklyButton = creatorButtonsMenu->getChildByID("weekly-button");
-        originalWeeklyButton->setVisible(false);
-        originalWeeklyButton = nullptr;
-
-        auto originalEventButton = creatorButtonsMenu->getChildByID("event-button");
-        originalEventButton->setVisible(false);
-        originalEventButton = nullptr;
-
-        auto originalGauntletButton = creatorButtonsMenu->getChildByID("gauntlets-button");
-        originalGauntletButton->setVisible(false);
-        originalGauntletButton = nullptr;
-
-        auto originalMckButton = creatorButtonsMenu->getChildByID("map-packs-button");
-
-		if (originalMckButton) {
-            originalMckButton->setVisible(false);
-            originalMckButton = nullptr;
-        }
-
-        auto originalPathsButton = creatorButtonsMenu->getChildByID("paths-button");
-        originalPathsButton->setVisible(false);
-        originalPathsButton = nullptr;
-
-        if (!Mod::get()->getSettingValue<bool>("unhide-extra-buttons")) {
-            auto mapBtn = creatorButtonsMenu->getChildByID("map-button");
-            mapBtn->setVisible(false);
-            mapBtn = nullptr;
-
-            auto vsBtn = creatorButtonsMenu->getChildByID("versus-button");
-            vsBtn->setVisible(false);
-            vsBtn = nullptr;
-        }
-
-		auto blCorner = this->getChildByID("bottom-left-corner");
-		blCorner->setVisible(false);
-        blCorner = nullptr;
+        if (CCNode* blCorner = getChildByID("bottom-left-corner")) blCorner->setVisible(false);
 
         creatorButtonsMenu->updateLayout();
 
-        auto questButtonColor = Mod::get()->getSettingValue<std::string>("quest-color-setting");
-        CircleBaseColor questButtonColorV = getColor(questButtonColor);
 
-        auto savedButtonColor = Mod::get()->getSettingValue<std::string>("saved-color-setting");
-        CircleBaseColor savedButtonColorV = getColor(savedButtonColor);
-
-        auto timelyButtonColor = Mod::get()->getSettingValue<std::string>("timely-color-setting");
-        CircleBaseColor timelyButtonColorV = getColor(timelyButtonColor);
-
-        auto gauntletButtonColor = Mod::get()->getSettingValue<std::string>("gauntlet-color-setting");
-        CircleBaseColor gauntletButtonColorV = getColor(gauntletButtonColor);
-
-        auto mckButtonColor = Mod::get()->getSettingValue<std::string>("mck-color-setting");
-        CircleBaseColor mckButtonColorV = getColor(mckButtonColor);
-
-        auto pathsButtonColor = Mod::get()->getSettingValue<std::string>("paths-color-setting");
-        CircleBaseColor pathsButtonColorV = getColor(pathsButtonColor);
-
-        auto questButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_challengeSprite.png"_spr, Mod::get()->getSettingValue<double>("button-sprite-size-setting"), questButtonColorV, CircleBaseSize::SmallAlt);
-        auto savedButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_savedSprite.png"_spr, Mod::get()->getSettingValue<double>("button-sprite-size-setting") + 0.15f, savedButtonColorV, CircleBaseSize::SmallAlt);
-        auto timelyButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_timeIcon_001.png", Mod::get()->getSettingValue<double>("button-sprite-size-setting") + 0.15f, timelyButtonColorV, CircleBaseSize::SmallAlt);
-        auto gauntletButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_gauntletSprite.png"_spr, Mod::get()->getSettingValue<double>("button-sprite-size-setting") + 0.15f, gauntletButtonColorV, CircleBaseSize::SmallAlt);
-        auto mckButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_mapPackSprite.png"_spr, Mod::get()->getSettingValue<double>("button-sprite-size-setting") + 0.2f, mckButtonColorV, CircleBaseSize::SmallAlt);
-        auto pathsButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_pathsSprite.png"_spr, Mod::get()->getSettingValue<double>("button-sprite-size-setting") + 0.2f, pathsButtonColorV, CircleBaseSize::SmallAlt);
+        double buttonSize = Mod::get()->getSettingValue<double>("button-sprite-size-setting");
+        
+        auto questButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_challengeSprite.png"_spr, buttonSize, getColor("quest-color-setting"), CircleBaseSize::SmallAlt);
+        auto savedButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_savedSprite.png"_spr, buttonSize + 0.15f, getColor("saved-color-setting"), CircleBaseSize::SmallAlt);
+        auto timelyButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_timeIcon_001.png", buttonSize + 0.15f, getColor("timely-color-setting"), CircleBaseSize::SmallAlt);
+        auto gauntletButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_gauntletSprite.png"_spr, buttonSize + 0.15f, getColor("gauntlet-color-setting"), CircleBaseSize::SmallAlt);
+        auto mapPacksButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_mapPackSprite.png"_spr, buttonSize + 0.2f, getColor("mck-color-setting"), CircleBaseSize::SmallAlt);
+        auto pathsButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_pathsSprite.png"_spr, buttonSize + 0.2f, getColor("paths-color-setting"), CircleBaseSize::SmallAlt);
 
         auto newQuestButton = CCMenuItemSpriteExtra::create(
             questButtonSprite,
@@ -184,7 +96,7 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         auto newSavedButton = CCMenuItemSpriteExtra::create(
             savedButtonSprite,
             this,
-            menu_selector(BetterCreatorLayer::onNewSavedLevels)
+            menu_selector(CreatorLayer::onSavedLevels)
         );
 
         auto timelyButton = CCMenuItemSpriteExtra::create(
@@ -196,142 +108,94 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         auto newGauntletButton = CCMenuItemSpriteExtra::create(
             gauntletButtonSprite,
             this,
-            menu_selector(BetterCreatorLayer::onNewGauntlets)
+            menu_selector(CreatorLayer::onGauntlets)
         );
 
-        auto newMckButton = CCMenuItemSpriteExtra::create(
-            mckButtonSprite,
+        auto newMapPacksButton = CCMenuItemSpriteExtra::create(
+            mapPacksButtonSprite,
             this,
-            menu_selector(BetterCreatorLayer::onNewMapPacks)
+            menu_selector(CreatorLayer::onMapPacks)
         );
 
         auto newPathsButton = CCMenuItemSpriteExtra::create(
             pathsButtonSprite,
             this,
-            menu_selector(BetterCreatorLayer::onNewPaths)
+            menu_selector(CreatorLayer::onPaths)
         );
+        
+        // these might go into bottom-left-menu, which is a vanilla node, so they should have _spr just in case
+        newQuestButton->setID("new-quests-button"_spr);
+        newSavedButton->setID("new-saved-button"_spr);
+        timelyButton->setID("timely-levels-button"_spr);
+        newGauntletButton->setID("new-gauntlets-button"_spr);
+        newMapPacksButton->setID("new-map-packs-button"_spr);
+        newPathsButton->setID("new-paths-button"_spr);
+        
+        bool flipMenus = Mod::get()->getSettingValue<bool>("flip-menus");
+        
+        CCMenu* bottomMenu = CCMenu::create();
+        CCMenu* bottomLeftMenu = this->getChildByID("bottom-left-menu");
+        auto menu1 = flipMenus ? bottomLeftMenu : bottomMenu;
+        auto menu2 = flipMenus ? bottomMenu : bottomLeftMenu;
 
-        newQuestButton->setID("new-quests-button");
-        newSavedButton->setID("new-saved-button");
-        timelyButton->setID("timely-levels-button");
-        newGauntletButton->setID("new-gauntlets-button");
-        newMckButton->setID("new-map-packs-button");
-        newPathsButton->setID("new-paths-button");
-
-        auto winSize = CCDirector::sharedDirector()->getWinSize();
-
-        if (auto bottomLeftMenu = this->getChildByID("bottom-left-menu")) {
-            if (Mod::get()->getSettingValue<bool>("flip-menus")) {
-    		    bottomLeftMenu->addChild(newSavedButton);
-                bottomLeftMenu->addChild(timelyButton);
-                bottomLeftMenu->addChild(newGauntletButton);
-                bottomLeftMenu->addChild(newMckButton);
-                if (Loader::get()->isModLoaded("minemaker0430.gddp_integration")) {
-                    Mod::get()->setSavedValue("gddp-enabled", true);
-
-                    auto originalGddpNode = creatorButtonsMenu->getChildByID("demon-progression-button");
-                    auto originalGddpButton = static_cast<CCMenuItemSpriteExtra*>(originalGddpNode);
-                    CCNode* centerRightMenu = getChildByID("minemaker0430.gddp_integration/center-right-menu");
-                    if (!centerRightMenu) centerRightMenu = getChildByID("cvolton.betterinfo/center-right-menu");
-                    if (!originalGddpButton && centerRightMenu) {
-                      originalGddpButton = static_cast<CCMenuItemSpriteExtra*>(centerRightMenu->getChildByID("demon-progression-button"));
-                    }
-
-                    originalGddpButton->setVisible(false);
-                    if (centerRightMenu) {
-                      geode::Layout* layout = centerRightMenu->getLayout();
-                      if (layout) layout->ignoreInvisibleChildren(true);
-                      centerRightMenu->updateLayout();
-                    }
-
-                    auto gddpButtonColor = Mod::get()->getSettingValue<std::string>("gddp-color-setting");
-                    CircleBaseColor gddpButtonColorV = getColor(gddpButtonColor);
-
-                    CircleButtonSprite* gddpButtonSprite;
-
-                    if (!Mod::get()->getSettingValue<bool>("stupid-gddp-sprite")) {
-                        gddpButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_gddpSprite.png"_spr, Mod::get()->getSettingValue<double>("button-sprite-size-setting") + 0.29f, gddpButtonColorV, CircleBaseSize::SmallAlt);
-                    } else {
-                        gddpButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_stupidGddpSprite.png"_spr, Mod::get()->getSettingValue<double>("button-sprite-size-setting") + 0.25f, gddpButtonColorV, CircleBaseSize::SmallAlt);
-                    }
-
-                    auto newGddpButton = CCMenuItemSpriteExtra::create(
-                        gddpButtonSprite,
-                        this,
-                        originalGddpButton->m_pfnSelector
-                    );
-
-                    newGddpButton->setID("new-demon-progression-button");
-
-                    bottomLeftMenu->addChild(newGddpButton);
-                }
-            } else {
-                bottomLeftMenu->addChild(newQuestButton);
-                bottomLeftMenu->addChild(newPathsButton);
-            }
-
-            AxisLayout* bLMLayout = static_cast<AxisLayout*>(bottomLeftMenu->getLayout());
-            bLMLayout->setAutoGrowAxis(true);
-		    bottomLeftMenu->updateLayout();
-	    }
-		
-        AxisLayout* bottomMenuLayout = AxisLayout::create(Axis::Row);
-        bottomMenuLayout->setAxisAlignment(AxisAlignment::Center);
-        bottomMenuLayout->setGap(4.0f);
-        bottomMenuLayout->setAutoGrowAxis(true);
-
-        auto bottomMenu = CCMenu::create();
-        bottomMenu->setID("bottom-menu"_spr);
-
-        if (Mod::get()->getSettingValue<bool>("flip-menus")) {
-            bottomMenu->addChild(newQuestButton);
-            bottomMenu->addChild(newPathsButton);
-        } else {
-            bottomMenu->addChild(newSavedButton);
-            bottomMenu->addChild(timelyButton);
-            bottomMenu->addChild(newGauntletButton);
-            bottomMenu->addChild(newMckButton);
-            if (Loader::get()->isModLoaded("minemaker0430.gddp_integration")) {
-                Mod::get()->setSavedValue("gddp-enabled", true);
-                auto originalGddpNode = creatorButtonsMenu->getChildByID("demon-progression-button");
-                auto originalGddpButton = static_cast<CCMenuItemSpriteExtra*>(originalGddpNode);
-                CCNode* centerRightMenu = getChildByID("minemaker0430.gddp_integration/center-right-menu");
+        if (menu1) {
+            menu1->addChild(newSavedButton);
+            menu1->addChild(timelyButton);
+            menu1->addChild(newGauntletButton);
+            menu1->addChild(newMapPacksButton);
+            // option 1: non-compact button
+            CCMenuItemSpriteExtra* originalGDDPIButton = static_cast<CCMenuItemSpriteExtra*>(creatorButtonsMenu->getChildByID("demon-progression-button"));
+            CCNode* centerRightMenu = nullptr;
+            // option 2: compact button
+            if (!originalGDDPIButton) {
+                centerRightMenu = getChildByID("minemaker0430.gddp_integration/center-right-menu");
                 if (!centerRightMenu) centerRightMenu = getChildByID("cvolton.betterinfo/center-right-menu");
-                if (!originalGddpButton && centerRightMenu) {
-                  originalGddpButton = static_cast<CCMenuItemSpriteExtra*>(centerRightMenu->getChildByID("demon-progression-button"));
-                }
-
-                originalGddpButton->setVisible(false);
+                originalGDDPIButton = static_cast<CCMenuItemSpriteExtra*>(centerRightMenu->getChildByID("demon-progression-button"));
+            }
+            if (originalGDDPIButton) {
+                originalGDDPIButton->setVisible(false);
                 if (centerRightMenu) {
                   geode::Layout* layout = centerRightMenu->getLayout();
                   if (layout) layout->ignoreInvisibleChildren(true);
                   centerRightMenu->updateLayout();
                 }
+                CircleButtonSprite* newGDDPIButtonSprite;
+                if (Mod::get()->getSettingValue<bool>("stupid-gddp-sprite"))
+                    newGDDPIButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_stupidGddpSprite.png"_spr, buttonSize + 0.25f, getColor("gddp-color-setting"), CircleBaseSize::SmallAlt);
+                else
+                    newGDDPIButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_gddpSprite.png"_spr, buttonSize + 0.29f, getColor("gddp-color-setting"), CircleBaseSize::SmallAlt);
 
-                auto gddpButtonColor = Mod::get()->getSettingValue<std::string>("gddp-color-setting");
-                CircleBaseColor gddpButtonColorV = getColor(gddpButtonColor);
-
-                CircleButtonSprite* gddpButtonSprite;
-
-                if (!Mod::get()->getSettingValue<bool>("stupid-gddp-sprite")) {
-                    gddpButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_gddpSprite.png"_spr, Mod::get()->getSettingValue<double>("button-sprite-size-setting") + 0.29f, gddpButtonColorV, CircleBaseSize::SmallAlt);
-                } else {
-                    gddpButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_stupidGddpSprite.png"_spr, Mod::get()->getSettingValue<double>("button-sprite-size-setting") + 0.25f, gddpButtonColorV, CircleBaseSize::SmallAlt);
-                }
-
-                auto newGddpButton = CCMenuItemSpriteExtra::create(
-                    gddpButtonSprite,
+                CCMenuItemSpriteExtra* newGDDPIButton = CCMenuItemSpriteExtra::create(
+                    newGDDPIButtonSprite,
                     this,
-                    originalGddpButton->m_pfnSelector
+                    originalGDDPIButton->m_pfnSelector
                 );
 
-                newGddpButton->setID("new-demon-progression-button");
-                bottomMenu->addChild(newGddpButton);
+                newGDDPIButton->setID("new-demon-progression-button"_spr);
+
+                menu1->addChild(newGDDPIButton);
             }
         }
 
-        this->addChild(bottomMenu);
+        if (menu2) {
+            menu2->addChild(newQuestButton);
+            menu2->addChild(newPathsButton);
+        }
+            
 
+        auto winSize = CCDirector::sharedDirector()->getWinSize();
+        
+        if (bottomLeftMenu) {
+            static_cast<AxisLayout*>(bottomLeftMenu->getLayout())->setAutoGrowAxis(true);
+            bottomLeftMenu->updateLayout();
+        }
+        int positionOffset = 7;
+        AxisLayout* bottomMenuLayout = AxisLayout::create(Axis::Row);
+        bottomMenuLayout->setAxisAlignment(AxisAlignment::Center);
+        bottomMenuLayout->setGap(4.0f);
+        bottomMenuLayout->setAutoGrowAxis(true);
+        bottomMenu->setID("bottom-menu"_spr);
+        addChild(bottomMenu);
         bottomMenu->setAnchorPoint({0.5f, 0.0f});
         bottomMenu->setPosition(winSize.width / 2, positionOffset);
         bottomMenu->setLayout(bottomMenuLayout, true);
@@ -344,6 +208,7 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
 
         };
     };
+
 
 
 
