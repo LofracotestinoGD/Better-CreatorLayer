@@ -6,7 +6,7 @@
 		"mac": "2.2074",
 		"ios": "2.2074"
 	},
-	"id": "lofracotestino.reworked_creator_menu",
+	"id": "lofracotestino.better_creator_layer",
 	"name": "Reworked Creator Menu",
 	"version": "v1.2.3",
 	"developer": "Lofracotestino",
@@ -131,5 +131,6 @@
 	},
 	"tags": ["offline", "enhancement"]
 }
+
 
 
