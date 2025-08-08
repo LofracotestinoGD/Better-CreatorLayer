@@ -124,8 +124,11 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         originalGauntletButton = nullptr;
 
         auto originalMckButton = creatorButtonsMenu->getChildByID("map-packs-button");
-        originalMckButton->setVisible(false);
-        originalMckButton = nullptr;
+
+		if (originalMckButton) {
+            originalMckButton->setVisible(false);
+            originalMckButton = nullptr;
+        }
 
         auto originalPathsButton = creatorButtonsMenu->getChildByID("paths-button");
         originalPathsButton->setVisible(false);
@@ -341,6 +344,7 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
 
         };
     };
+
 
 
 
