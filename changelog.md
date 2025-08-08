@@ -25,3 +25,6 @@
 # 1.1.3
 - (almost) Complete code rework (Thanks NyteLyte!!)
 
+# 1.2.0
+- Added GD-Roulette Compatability
+
