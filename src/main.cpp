@@ -224,14 +224,15 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         bottomMenu->setContentWidth(400.0f);
         bottomMenu->setLayout(bottomMenuLayout, true);
 
+        creatorButtonsMenu->setContentSize({300.0f, 135.0f});
         creatorButtonsMenu->setScale(1.5f);
-        creatorButtonsMenu->setContentSize({260.0f, 130.0f});
         creatorButtonsMenu->updateLayout();
 
         return true;
 
         };
     };
+
 
 
 
