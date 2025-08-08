@@ -33,3 +33,7 @@
 
 # 1.2.2
 - We are so Back
+
+# 1.2.3
+- Rebranded
+
