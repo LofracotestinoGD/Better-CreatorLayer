@@ -132,13 +132,11 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         newPathsButton->setID("new-paths-button"_spr);
         
         bool flipMenus = Mod::get()->getSettingValue<bool>("flip-menus");
-        CCNode* menu1 = flipMenus ? getChildByID("bottom-left-menu") : CCMenu::create();
-        CCNode* menu2 = flipMenus ? CCMenu::create() : getChildByID("bottom-left-menu");
-        CCMenu* bottomMenu = CCMenu::create();
-        CCNode* bottomLeftMenu = getChildByID("bottom-left-menu");
         
-        menu1 = flipMenus ? bottomLeftMenu : bottomMenu;
-        menu2 = flipMenus ? bottomMenu : bottomLeftMenu;
+        CCMenu* bottomMenu = CCMenu::create();
+        CCMenu* bottomLeftMenu = this->getChildByID("bottom-left-menu");
+        auto menu1 = flipMenus ? bottomLeftMenu : bottomMenu;
+        auto menu2 = flipMenus ? bottomMenu : bottomLeftMenu;
 
         if (menu1) {
             menu1->addChild(newSavedButton);
@@ -210,6 +208,7 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
 
         };
     };
+
 
 
 
