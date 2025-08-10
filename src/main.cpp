@@ -1,15 +1,48 @@
+// Geode Header
 #include <Geode/Geode.hpp>
+
+// Other Headers
 #include <Geode/ui/BasedButtonSprite.hpp>
 #include <Geode/modify/CreatorLayer.hpp>
-#include <Geode/modify/ChallengesPage.hpp>
 #include <Geode/ui/Layout.hpp>
 #include <Geode/ui/Popup.hpp>
 #include <Geode/utils/cocos.hpp>
-#include "TimelyLayer.hpp"
-#include "Variables.hpp"
 
+// Include Timely Levels Layer  
+#include "TimelyLayer.hpp"
+
+// Geode Namespace
 using namespace geode::prelude;
 
+// Class for Quest Notification
+class QuestNotification final : public CCSprite {
+public:
+	static QuestNotification* createWithSpriteFrameName(char const* frameName) {
+		auto ret = new QuestNotification;
+		if (ret -> initWithSpriteFrameName(frameName)) {
+			ret -> autorelease();
+			return ret;
+		}
+
+		delete ret;
+		return nullptr;
+	}
+	void setQuestsSprite(CCSprite* questsSprite) {
+		m_questsSprite = questsSprite;
+
+		return;
+	}
+private:
+	CCSprite* m_questsSprite;
+
+	void update(float dt) override {
+		this -> setVisible(m_questsSprite -> getChildrenCount());
+
+		return;
+	}
+};
+
+// Main Code
 class $modify(BetterCreatorLayer, CreatorLayer) {
 
     static void onModify(auto& self) {
@@ -20,6 +53,7 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
 
     struct Fields {
         CCMenuItemSpriteExtra* m_originalQuestButton = nullptr;
+        CCSprite* m_questsSprite = nullptr;
     };
 
     void onExit() {
@@ -65,23 +99,22 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         m_fields->m_originalQuestButton = static_cast<CCMenuItemSpriteExtra*>(creatorButtonsMenu->getChildByID("quests-button"));
         m_fields->m_originalQuestButton->setVisible(false);
 
-        Variables::ogQuestBtnSpr = cocos::getChildBySpriteFrameName(ogQuestBtn, "GJ_challengeBtn_001.png");
+        m_fields->m_questsSprite = static_cast<CCSprite*>(ogQuestBtn->getChildByType<CCSprite*>(0));
 
-#define HIDE_BUTTON(name) if (CCNode* originalButton = creatorButtonsMenu->getChildByID(name)) originalButton->setVisible(false)
-        HIDE_BUTTON("saved-button");
-        HIDE_BUTTON("daily-button");
-        HIDE_BUTTON("weekly-button");
-        HIDE_BUTTON("event-button");
-        HIDE_BUTTON("gauntlets-button");
-        HIDE_BUTTON("map-packs-button");
-        HIDE_BUTTON("paths-button");
-        if (!Mod::get()->getSettingValue<bool>("unhide-extra-buttons")) { HIDE_BUTTON("map-button"); HIDE_BUTTON("versus-button"); }
-#undef HIDE_BUTTON
+        #define HIDE_BUTTON(name) if (CCNode* originalButton = creatorButtonsMenu->getChildByID(name)) originalButton->setVisible(false)
+                HIDE_BUTTON("saved-button");
+                HIDE_BUTTON("daily-button");
+                HIDE_BUTTON("weekly-button");
+                HIDE_BUTTON("event-button");
+                HIDE_BUTTON("gauntlets-button");
+                HIDE_BUTTON("map-packs-button");
+                HIDE_BUTTON("paths-button");
+                if (!Mod::get()->getSettingValue<bool>("unhide-extra-buttons")) { HIDE_BUTTON("map-button"); HIDE_BUTTON("versus-button"); }
+        #undef HIDE_BUTTON
 
         if (CCNode* blCorner = getChildByID("bottom-left-corner")) blCorner->setVisible(false);
 
         creatorButtonsMenu->updateLayout();
-
 
         double buttonSize = Mod::get()->getSettingValue<double>("button-sprite-size-setting");
         
@@ -136,17 +169,15 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         newMapPacksButton->setID("new-map-packs-button"_spr);
         newPathsButton->setID("new-paths-button"_spr);
 
-		Variables::questNotif = CCSprite::createWithSpriteFrameName("exMark_001.png");
-		Variables::questNotif->setScale(0.55f);
-		Variables::questNotif->setVisible(false);
-		Variables::questNotif->setPosition(newQuestButton->getContentSize() - ccp(8.0f,9.0f));
-		Variables::questNotif->setID("quest-notification");
-		newQuestButton->addChild(Variables::questNotif);
+		auto questNotif = QuestNotification::createWithSpriteFrameName("exMark_001.png");
+		
+		questNotif->setPosition(newQuestButton->getContentSize() - ccp(8.0f,9.0f));
+        questNotif->setScale(0.55f);
+        questNotif->setQuestsSprite(m_questsSprite);
+		questNotif->scheduleUpdate();
+		newQuestButton->addChild(questNotif);
+		questNotif->setID("quest-notification");
 
-        if (Variables::ogQuestBtnSpr->getChildrenCount()) {
-            Variables::questNotif->setVisible(true);
-        }
-        
         bool flipMenus = Mod::get()->getSettingValue<bool>("flip-menus");
         
         auto bottomMenu = CCMenu::create();
@@ -224,7 +255,6 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
             menu2->addChild(newPathsButton);
         }
             
-
         auto winSize = CCDirector::sharedDirector()->getWinSize();
         
         if (bottomLeftMenu) {
@@ -251,14 +281,4 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
 
         };
     };
-
-class $modify(MyChallengesPage, ChallengesPage) {
-    void claimItem(ChallengeNode* p0, GJChallengeItem* p1, CCPoint p2) {
-        ChallengesPage::claimItem(p0, p1, p2);
-        if (!Variables::ogQuestBtnSpr->getChildrenCount()) {
-            Variables::questNotif->setVisible(false);
-        }
-    };
-};
-
 
