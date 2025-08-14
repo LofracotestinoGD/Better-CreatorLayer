@@ -12,34 +12,33 @@ bool TimelyLayer::setup(CreatorLayer* creatorLayer) {
     m_buttonMenu->setID("button-menu");
     m_bgSprite->setID("background");
     m_closeBtn->setID("close-button");
-
+  
     m_creatorLayer = creatorLayer;
+ 
+    auto dailyLvlSpr = CCSprite::createWithSpriteFrameName("GJ_dailyTitle.png"_spr);
+    auto weeklyLvlSpr = CCSprite::createWithSpriteFrameName("GJ_weeklyTitle.png"_spr);
+    auto eventLvlSpr = CCSprite::createWithSpriteFrameName("GJ_eventTitle.png"_spr);
 
-    std::string dailyName;
-    std::string weeklyName;
-    
-    if (Mod::get()->getSettingValue<bool>("actual-names")) {
-        dailyName = "Today";
-        weeklyName = "Demon of the Week";
-    } else {
-        dailyName = "Daily";
-        weeklyName = "Weekly";
-    }
+    auto dailyLvlBtnSpr = ButtonSprite::create(dailyLvlSpr, 230, 0, 37.f, 1.f, true, "RCL_button_08.png"_spr, false);
+
+    auto weeklyLvlBtnSpr = ButtonSprite::create(weeklyLvlSpr, 285, 1, 0.f, 1.f, true, "RCL_button_07.png"_spr, false);
+
+    auto eventLvlBtnSpr = ButtonSprite::create(eventLvlSpr, 245, 0, 0.f, 1.f, true, "RCL_button_06.png"_spr, false);
 
     auto newDailyBtn = CCMenuItemSpriteExtra::create(
-        ButtonSprite::create(dailyName.c_str(), 280, true, "bigFont.fnt", "GJ_button_01.png", 0.0f, 0.8f),
+        dailyLvlBtnSpr,
         this,
         menu_selector(TimelyLayer::onNewDaily)
     );
 
     auto newWeeklyBtn = CCMenuItemSpriteExtra::create(
-        ButtonSprite::create(weeklyName.c_str(), 280, true, "bigFont.fnt", "GJ_button_01.png", 0.0f, 0.8f),
+        weeklyLvlBtnSpr,
         this,
         menu_selector(TimelyLayer::onNewWeekly)
     );
 
     auto newEventBtn = CCMenuItemSpriteExtra::create(
-        ButtonSprite::create("Event", 280, true, "bigFont.fnt", "GJ_button_01.png", 0.0f, 0.8f),
+        eventLvlBtnSpr,
         this,
         menu_selector(TimelyLayer::onNewEvent)
     );
@@ -79,13 +78,13 @@ bool TimelyLayer::setup(CreatorLayer* creatorLayer) {
     buttonMenu->addChild(newDailyBtn);
     buttonMenu->addChild(newWeeklyBtn);
     buttonMenu->addChild(newEventBtn);
-    buttonMenu->setContentHeight(170.0f);
+    buttonMenu->setContentHeight(185.0f);
     buttonMenu->setID("timely-buttons-menu");
-    m_mainLayer->addChildAtPosition(buttonMenu, Anchor::Center, { 0.0f, -17.5f });
+    m_mainLayer->addChildAtPosition(buttonMenu, Anchor::Center, {0.0f, -15.0f});
     buttonMenu->setLayout(buttonMenuLayout, true);
 
     auto artMenu = CCMenu::create();
-    artMenu->setContentSize({400.0f, 225.0f});
+    artMenu->setContentSize({420.0f, 280.0f});
     artMenu->setID("art-menu");
     artMenu->addChildAtPosition(artSpr01, Anchor::BottomLeft);
     artMenu->addChildAtPosition(artSpr02, Anchor::BottomRight);
@@ -101,7 +100,7 @@ bool TimelyLayer::setup(CreatorLayer* creatorLayer) {
 
 TimelyLayer* TimelyLayer::create(CreatorLayer* creatorLayer) {
     auto ret = new TimelyLayer();
-    if (ret->initAnchored(400.0f, 225.0f, creatorLayer)) {
+    if (ret->initAnchored(420.0f, 280.0f, creatorLayer, "GJ_square02.png")) {
         ret->autorelease();
         return ret;
     }

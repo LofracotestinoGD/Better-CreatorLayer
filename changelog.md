@@ -1,3 +1,9 @@
+# 1.4.0
+- Added setting to compact timely button.
+- Styled the timely layer.
+- Fixed bad layout when having both compact timely button and show unused buttons in the settings on.
+- Changed mod logo.
+
 # 1.3.2
 - Reworked quest notification system. (Thanks Fryy_55 for the code!)
 - Cleaned up (Ever so slightly) the mod code.

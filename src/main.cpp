@@ -2,10 +2,12 @@
 #include <Geode/Geode.hpp>
 
 // Other Headers
-#include <Geode/ui/BasedButtonSprite.hpp>
 #include <Geode/modify/CreatorLayer.hpp>
+
+#include <Geode/ui/BasedButtonSprite.hpp>
 #include <Geode/ui/Layout.hpp>
 #include <Geode/ui/Popup.hpp>
+
 #include <Geode/utils/cocos.hpp>
 
 // Include Timely Levels Layer  
@@ -92,6 +94,8 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
             return true;
         }
 
+        auto winSize = CCDirector::sharedDirector()->getWinSize();
+
         CCNode* creatorButtonsMenu = this->getChildByID("creator-buttons-menu");
         static_cast<AxisLayout*>(creatorButtonsMenu->getLayout())->ignoreInvisibleChildren(true);
     
@@ -109,6 +113,7 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
                 HIDE_BUTTON("gauntlets-button");
                 HIDE_BUTTON("map-packs-button");
                 HIDE_BUTTON("paths-button");
+                HIDE_BUTTON("scores-button");
                 if (!Mod::get()->getSettingValue<bool>("unhide-extra-buttons")) { HIDE_BUTTON("map-button"); HIDE_BUTTON("versus-button"); }
         #undef HIDE_BUTTON
 
@@ -120,11 +125,18 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         
         auto questButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_challengeSprite.png"_spr, buttonSize, getColor("quest-color-setting"), CircleBaseSize::SmallAlt);
         auto savedButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_savedSprite.png"_spr, buttonSize + 0.15f, getColor("saved-color-setting"), CircleBaseSize::SmallAlt);
-        auto timelyButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_timelySprite.png"_spr, buttonSize + 0.15f, getColor("timely-color-setting"), CircleBaseSize::SmallAlt);
+        CCSprite* timelyButtonSprite; 
+        if (!Mod::get()->getSettingValue<bool>("compact-button")) {
+            timelyButtonSprite = CCSprite::createWithSpriteFrameName("GJ_timelyBtn_001.png"_spr);
+            timelyButtonSprite->setScale(0.8f);
+        } else {
+            timelyButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_timelySprite.png"_spr, buttonSize + 0.15f, getColor("timely-color-setting"), CircleBaseSize::SmallAlt);
+        }
         auto gauntletButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_gauntletSprite.png"_spr, buttonSize + 0.15f, getColor("gauntlet-color-setting"), CircleBaseSize::SmallAlt);
         auto mapPacksButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_mapPackSprite.png"_spr, buttonSize + 0.2f, getColor("mck-color-setting"), CircleBaseSize::SmallAlt);
         auto pathsButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_pathsSprite.png"_spr, buttonSize + 0.2f, getColor("paths-color-setting"), CircleBaseSize::SmallAlt);
-
+        auto scoresButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_scoresSprite.png"_spr, buttonSize + 0.2f, getColor("scores-color-setting"), CircleBaseSize::SmallAlt);
+        
         auto newQuestButton = CCMenuItemSpriteExtra::create(
             questButtonSprite,
             this,
@@ -143,6 +155,12 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
             menu_selector(BetterCreatorLayer::onTimely)
         );
 
+        if (!Mod::get()->getSettingValue<bool>("compact-button")) {
+            timelyButton->setContentSize({ 83.6f, 83.6f });
+		    timelyButton->setPosition({ 450.f, 155.f });
+            typeinfo_cast<CCSprite*>(timelyButton->getChildren()->objectAtIndex(0))->setPositionX(44.f);
+        }
+
         auto newGauntletButton = CCMenuItemSpriteExtra::create(
             gauntletButtonSprite,
             this,
@@ -160,14 +178,21 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
             this,
             menu_selector(CreatorLayer::onPaths)
         );
+
+        auto newScoresButton = CCMenuItemSpriteExtra::create(
+            scoresButtonSprite,
+            this,
+            menu_selector(CreatorLayer::onLeaderboards)
+        );
         
-        // these might go into bottom-left-menu, which is a vanilla node, so they should have _spr just in case
+        // These might go into bottom-left-menu, which is a vanilla node, so they should have _spr just in case
         newQuestButton->setID("new-quests-button"_spr);
         newSavedButton->setID("new-saved-button"_spr);
         timelyButton->setID("timely-levels-button"_spr);
         newGauntletButton->setID("new-gauntlets-button"_spr);
         newMapPacksButton->setID("new-map-packs-button"_spr);
         newPathsButton->setID("new-paths-button"_spr);
+        newScoresButton->setID("new-scores-button");
 
 		auto questNotif = QuestNotification::createWithSpriteFrameName("exMark_001.png");
 		
@@ -182,12 +207,22 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         
         auto bottomMenu = CCMenu::create();
         auto bottomLeftMenu = this->getChildByID("bottom-left-menu");
+        auto rightMenu = this->getChildByID("cvolton.betterinfo/center-right-menu");
+        if (!rightMenu) rightMenu = this->getChildByID("minemaker0430.gddp_integration/center-right-menu");
+        if (!rightMenu) {
+            rightMenu = CCMenu::create();
+            rightMenu->setID("center-right-menu"_spr);
+        } 
         auto menu1 = flipMenus ? bottomLeftMenu : bottomMenu;
         auto menu2 = flipMenus ? bottomMenu : bottomLeftMenu;
 
+        int positionOffset = 7;
+
         if (menu1) {
             menu1->addChild(newSavedButton);
-            menu1->addChild(timelyButton);
+            if (Mod::get()->getSettingValue<bool>("compact-button")) {   
+                menu1->addChild(timelyButton);
+            }
             menu1->addChild(newGauntletButton);
             menu1->addChild(newMapPacksButton);
             if (Loader::get()->isModLoaded("minemaker0430.gddp_integration")) {
@@ -254,14 +289,26 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
             menu2->addChild(newQuestButton);
             menu2->addChild(newPathsButton);
         }
-            
-        auto winSize = CCDirector::sharedDirector()->getWinSize();
+
+        if (rightMenu) {
+            rightMenu->addChild(newScoresButton);
+
+            AxisLayout* rightMenuLayout = AxisLayout::create(Axis::Column);
+            rightMenuLayout->setAxisAlignment(AxisAlignment::Center);
+            rightMenuLayout->setGap(4.0f);
+            rightMenuLayout->setAutoGrowAxis(true);
+            if (rightMenu->getID() == "center-right-menu"_spr) this->addChild(rightMenu);
+            rightMenu->setAnchorPoint({1.0f, 0.5f});
+            rightMenu->setPosition(567.9f, winSize.height / 2);
+            rightMenu->setContentWidth(400.0f);
+            rightMenu->setLayout(rightMenuLayout, true);
+        }
         
         if (bottomLeftMenu) {
             bottomLeftMenu->setContentHeight(240.0f);
             bottomLeftMenu->updateLayout();
         }
-        int positionOffset = 7;
+
         AxisLayout* bottomMenuLayout = AxisLayout::create(Axis::Row);
         bottomMenuLayout->setAxisAlignment(AxisAlignment::Center);
         bottomMenuLayout->setGap(4.0f);
@@ -273,8 +320,38 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         bottomMenu->setContentWidth(400.0f);
         bottomMenu->setLayout(bottomMenuLayout, true);
 
+        // Changes to creator-buttons-menu
         creatorButtonsMenu->setScale(1.5f);
-        creatorButtonsMenu->setContentSize({260.0f, 130.0f});
+        creatorButtonsMenu->setContentSize({230.0f, 160.0f});
+        creatorButtonsMenu->setPosition({winSize.width / 2, creatorButtonsMenu->getPositionY() + 20.0f});
+
+        auto featuredBtn = creatorButtonsMenu->getChildByID("featured-button");
+        auto searchBtn = creatorButtonsMenu->getChildByID("search-button");
+        auto createBtn = creatorButtonsMenu->getChildByID("create-button");
+        auto listsBtn = creatorButtonsMenu->getChildByID("lists-button");
+        auto mapBtn = creatorButtonsMenu->getChildByID("map-button");
+        auto versusBtn = creatorButtonsMenu->getChildByID("versus-button");
+
+        featuredBtn->setZOrder(-10);
+        searchBtn->setZOrder(0);
+        createBtn->setZOrder(5);
+        listsBtn->setZOrder(10);
+        mapBtn->setZOrder(10);
+        versusBtn->setZOrder(15);
+
+        if (!Mod::get()->getSettingValue<bool>("compact-button")) {
+            creatorButtonsMenu->addChild(timelyButton);
+            timelyButton->setZOrder(-5);
+            if (Mod::get()->getSettingValue<bool>("unhide-extra-buttons")) {
+                creatorButtonsMenu->setContentWidth(290.f);
+
+                featuredBtn->setZOrder(-15);
+                listsBtn->setZOrder(-10);
+            }
+        } else if (Mod::get()->getSettingValue<bool>("unhide-extra-buttons")) {
+            listsBtn->setZOrder(-5);
+        }
+
         creatorButtonsMenu->updateLayout();
 
         return true;

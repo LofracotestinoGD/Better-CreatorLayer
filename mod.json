@@ -8,7 +8,7 @@
 	},
 	"id": "lofracotestino.better_creator_layer",
 	"name": "Reworked Creator Layer",
-	"version": "v1.3.2",
+	"version": "v1.4.0",
 	"developer": "Lofracotestino",
 	"description": "reworks some buttons in the Creator Layer.",
 	"resources": {
@@ -16,7 +16,10 @@
             "TextureSheet": [
                 "resources/sheet/*.png"
         	]
-		}
+		},
+		"sprites": [
+			"resources/*.png"
+		]
 	},
     "dependencies": {
         "geode.node-ids": ">=v1.21.0"
@@ -75,6 +78,12 @@
 			"default": "Green",
 			"one-of": ["Blue", "Cyan", "Dark Aqua", "Dark Purple", "Gray", "Green", "Pink"]
 		},
+		"scores-color-setting": {
+			"type": "string",
+			"name": "Color of Scores Button",
+			"default": "Green",
+			"one-of": ["Blue", "Cyan", "Dark Aqua", "Dark Purple", "Gray", "Green", "Pink"]
+		},
 		"gddp-color-setting": {
 			"type": "string",
 			"name": "Color of GDDP Button",
@@ -114,11 +123,6 @@
 				"input": false
 			}
 		},
-		"actual-names": {
-			"type": "bool",
-			"name": "Alternate Timely Names",
-			"default": false
-		},
 		"stupid-gddp-sprite": {
 			"type": "bool",
 			"name": "Stupid GDDP Button Texture",
@@ -126,9 +130,15 @@
 		},
 		"flip-menus": {
 			"type": "bool",
-			"name": "Flip the Menus",
+			"name": "Swap Bottom/Left Menus",
 			"default": false,
-			"description": "Flip the Menus the buttons are in."
+			"description": "Flip the bottom-left menu with the bottom menu."
+		},
+		"compact-button": {
+			"type": "bool",
+			"name": "Compact Timely Button",
+			"default": false,
+			"description": "Have the timely button in a compact circle button instead of the creator buttons menu."
 		},
 		"unhide-extra-buttons": {
 			"type": "bool",
