@@ -10,7 +10,7 @@
 
 #include <Geode/utils/cocos.hpp>
 
-// Include Timely Levels Layer  
+// Include Timely Levels Layer         
 #include "TimelyLayer.hpp"
 
 // Geode Namespace
