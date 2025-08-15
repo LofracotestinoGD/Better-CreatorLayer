@@ -21,7 +21,7 @@ bool TimelyLayer::setup(CreatorLayer* creatorLayer) {
 
     auto dailyLvlBtnSpr = ButtonSprite::create(dailyLvlSpr, 230, 0, 37.f, 1.f, true, "RCL_button_08.png"_spr, false);
 
-    auto weeklyLvlBtnSpr = ButtonSprite::create(weeklyLvlSpr, 285, 1, 0.f, 1.f, true, "RCL_button_07.png"_spr, false);
+    auto weeklyLvlBtnSpr = ButtonSprite::create(weeklyLvlSpr, 300, 1, 0.f, 1.f, true, "RCL_button_07.png"_spr, false);
 
     auto eventLvlBtnSpr = ButtonSprite::create(eventLvlSpr, 245, 0, 0.f, 1.f, true, "RCL_button_06.png"_spr, false);
 
