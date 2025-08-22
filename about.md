@@ -19,9 +19,9 @@ If you encountered an issue or incompatibility with the mod or simply want to gi
 
 Without The Mod:
 
-<img src="resources/Disabled.png" alt="Without The Mod Screenshot"/>
+<img src="resources/Disabled.jpg" alt="Without The Mod Screenshot"/>
 
 With The Mod:
 
-<img src="resources/Enabled.png"  alt="Without The Mod Screenshot" />
+<img src="resources/Enabled.jpg"  alt="With The Mod Screenshot" />
 
