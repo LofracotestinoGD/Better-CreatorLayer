@@ -3,7 +3,7 @@
 - Changed implementation of the timely button (i.e. `CategoryButtonSprite` instead of `CCSprite`).
 - Hardened the new button's implementation by using `m_pListener`.
 - Added compatability with `khronophobia.shortcuts_menu` and `techstudent10.gdguesser`.
-- Added known incompatibilities and contribution info in `about.md`.
+- Added known incompatibilities, contribution info and preview in `about.md`.
 - Fixed wrong positioning of the right menu if you had a different aspect ratio from `16:9`.
 
 # 1.4.0

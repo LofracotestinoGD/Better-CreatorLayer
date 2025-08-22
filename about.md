@@ -15,3 +15,13 @@ If you encountered an issue or incompatibility with the mod or simply want to gi
 - HUGE Thanks to Fryy_55, Nwo5 and Alphalaneous for Helping Me Create My First Mod!
 - As well as NyteLyte for the code Rework!!
 
+# Preview
+
+Without The Mod:
+
+<img src="resources/Disabled.png" alt="Without The Mod Screenshot"/>
+
+With The Mod:
+
+<img src="resources/Enabled.png"  alt="Without The Mod Screenshot" />
+
