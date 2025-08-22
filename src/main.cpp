@@ -55,7 +55,6 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
 
     struct Fields {
         CCMenuItemSpriteExtra* m_originalQuestButton = nullptr;
-        CCSprite* m_questsSprite = nullptr;
     };
 
     void onExit() {
@@ -73,7 +72,6 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
     void onTimely(CCObject*) {
         TimelyLayer::create(this)->show();
     }
-
 
     CircleBaseColor getColor(std::string setting) {
         std::string colorStr = Mod::get()->getSettingValue<std::string>(setting);
@@ -103,8 +101,6 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         m_fields->m_originalQuestButton = static_cast<CCMenuItemSpriteExtra*>(creatorButtonsMenu->getChildByID("quests-button"));
         m_fields->m_originalQuestButton->setVisible(false);
 
-        m_fields->m_questsSprite = static_cast<CCSprite*>(ogQuestBtn->getChildByType<CCSprite*>(0));
-
         #define HIDE_BUTTON(name) if (CCNode* originalButton = creatorButtonsMenu->getChildByID(name)) originalButton->setVisible(false)
                 HIDE_BUTTON("saved-button");
                 HIDE_BUTTON("daily-button");
@@ -127,10 +123,10 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         auto savedButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_savedSprite.png"_spr, buttonSize + 0.15f, getColor("saved-color-setting"), CircleBaseSize::SmallAlt);
         CCSprite* timelyButtonSprite; 
         if (!Mod::get()->getSettingValue<bool>("compact-button")) {
-            timelyButtonSprite = CCSprite::createWithSpriteFrameName("GJ_timelyBtn_001.png"_spr);
+            timelyButtonSprite = CategoryButtonSprite::createWithSpriteFrameName("GJ_timelySprite_002.png"_spr, 0.877f, CategoryBaseColor::Green, CategoryBaseSize::Big);
             timelyButtonSprite->setScale(0.8f);
         } else {
-            timelyButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_timelySprite.png"_spr, buttonSize + 0.15f, getColor("timely-color-setting"), CircleBaseSize::SmallAlt);
+            timelyButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_timelySprite_001.png"_spr, buttonSize + 0.15f, getColor("timely-color-setting"), CircleBaseSize::SmallAlt);
         }
         auto gauntletButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_gauntletSprite.png"_spr, buttonSize + 0.15f, getColor("gauntlet-color-setting"), CircleBaseSize::SmallAlt);
         auto mapPacksButtonSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_mapPackSprite.png"_spr, buttonSize + 0.2f, getColor("mck-color-setting"), CircleBaseSize::SmallAlt);
@@ -250,7 +246,7 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
 
                     CCMenuItemSpriteExtra* newGDDPIButton = CCMenuItemSpriteExtra::create(
                         newGDDPIButtonSprite,
-                        this,
+                        originalGDDPIButton->m_pListener,
                         originalGDDPIButton->m_pfnSelector
                     );
 
@@ -274,7 +270,7 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
 
                     CCMenuItemSpriteExtra* newGDRButton = CCMenuItemSpriteExtra::create(
                         newGDRButtonSprite,
-                        this,
+                        originalGDRButton->m_pListener,
                         originalGDRButton->m_pfnSelector
                     );
 
@@ -292,15 +288,60 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
 
         if (rightMenu) {
             rightMenu->addChild(newScoresButton);
+            if (Loader::get()->isModLoaded("khronophobia.shortcuts_menu")) {
+                auto bottomRightMenu = this->getChildByID("bottom-right-menu");
+                CCMenuItemSpriteExtra* ogShortcutsBtn = static_cast<CCMenuItemSpriteExtra*>(bottomRightMenu->getChildByID("khronophobia.shortcuts_menu/shortcuts-menu-button"));
+
+                if (ogShortcutsBtn) {
+                    ogShortcutsBtn->setVisible(false);
+                    bottomRightMenu->getLayout()->ignoreInvisibleChildren(true);
+                    bottomRightMenu->updateLayout();
+
+                    auto newSCBtnSprite = CircleButtonSprite::createWithSpriteFrameName("GJ_scSprite.png"_spr, buttonSize, getColor("sc-color-setting"), CircleBaseSize::SmallAlt);
+
+                    auto newSCButton = CCMenuItemSpriteExtra::create(
+                        newSCBtnSprite, 
+                        ogShortcutsBtn->m_pListener, 
+                        ogShortcutsBtn->m_pfnSelector
+                    );
+
+                    newSCButton->setID("new-shortcuts-menu-button"_spr);
+
+                    rightMenu->addChild(newSCButton);
+                }
+            }
+            if (Loader::get()->isModLoaded("techstudent10.gdguesser")) {
+                auto bottomRightMenu = this->getChildByID("bottom-right-menu");
+                CCMenuItemSpriteExtra* ogGDGBtn = static_cast<CCMenuItemSpriteExtra*>(bottomRightMenu->getChildByID("techstudent10.gdguesser/start-btn"));
+
+                if (ogGDGBtn) {
+                    ogGDGBtn->setVisible(false);
+                    bottomRightMenu->getLayout()->ignoreInvisibleChildren(true);
+                    bottomRightMenu->updateLayout();
+
+                    auto newGDGBtnSprite = CCSprite::createWithSpriteFrameName("GJ_gdgSprite.png"_spr);
+                    newGDGBtnSprite->setScale(0.101f);
+
+                    auto newGDGButton = CCMenuItemSpriteExtra::create(
+                        newGDGBtnSprite, 
+                        ogGDGBtn->m_pListener, 
+                        ogGDGBtn->m_pfnSelector
+                    );
+
+                    newGDGButton->setID("new-guesser-start-button"_spr);
+
+                    rightMenu->addChild(newGDGButton);
+                }
+            }
 
             AxisLayout* rightMenuLayout = AxisLayout::create(Axis::Column);
             rightMenuLayout->setAxisAlignment(AxisAlignment::Center);
             rightMenuLayout->setGap(4.0f);
-            rightMenuLayout->setAutoGrowAxis(true);
+            rightMenuLayout->ignoreInvisibleChildren(true);
             if (rightMenu->getID() == "center-right-menu"_spr) this->addChild(rightMenu);
             rightMenu->setAnchorPoint({1.0f, 0.5f});
-            rightMenu->setPosition(567.9f, winSize.height / 2);
-            rightMenu->setContentWidth(400.0f);
+            rightMenu->setPosition(winSize.width -4.f, winSize.height / 2.f);
+            rightMenu->setContentHeight(210.0f);
             rightMenu->setLayout(rightMenuLayout, true);
         }
         
@@ -312,12 +353,11 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         AxisLayout* bottomMenuLayout = AxisLayout::create(Axis::Row);
         bottomMenuLayout->setAxisAlignment(AxisAlignment::Center);
         bottomMenuLayout->setGap(4.0f);
-        bottomMenuLayout->setAutoGrowAxis(true);
         bottomMenu->setID("bottom-menu"_spr);
         addChild(bottomMenu);
         bottomMenu->setAnchorPoint({0.5f, 0.0f});
         bottomMenu->setPosition(winSize.width / 2, positionOffset);
-        bottomMenu->setContentWidth(400.0f);
+        bottomMenu->setContentWidth(430.0f);
         bottomMenu->setLayout(bottomMenuLayout, true);
 
         // Changes to creator-buttons-menu
@@ -333,7 +373,7 @@ class $modify(BetterCreatorLayer, CreatorLayer) {
         auto versusBtn = creatorButtonsMenu->getChildByID("versus-button");
 
         featuredBtn->setZOrder(-10);
-        searchBtn->setZOrder(0);
+        searchBtn->setZOrder(1);
         createBtn->setZOrder(5);
         listsBtn->setZOrder(10);
         mapBtn->setZOrder(10);

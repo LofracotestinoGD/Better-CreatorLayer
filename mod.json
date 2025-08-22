@@ -27,7 +27,11 @@
 	"incompatibilities": {
 		"capeling.goodbye_unnecessary_buttons": {
 			"version": ">=v1.0.0",
-            "importance": "conflicting"
+      "importance": "conflicting"
+		},
+		"noxygalaxy.bring_back_16": {
+			"version": ">=1.0.0",
+			"importance": "conflicting"
 		}
 	},
 	"links": {
@@ -93,6 +97,12 @@
 		"gdr-color-setting": {
 			"type": "string",
 			"name": "Color of GD-Roulette Button",
+			"default": "Green",
+			"one-of": ["Blue", "Cyan", "Dark Aqua", "Dark Purple", "Gray", "Green", "Pink"]
+		},
+		"sc-color-setting": {
+			"type": "string",
+			"name": "Color of Shortcuts Button",
 			"default": "Green",
 			"one-of": ["Blue", "Cyan", "Dark Aqua", "Dark Purple", "Gray", "Green", "Pink"]
 		},
