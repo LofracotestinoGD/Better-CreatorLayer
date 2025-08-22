@@ -1,3 +1,11 @@
+# 1.4.1
+- Removed useless fields variabìble (i.e. `m_questSprite`).
+- Changed implementation of the timely button (i.e. `CategoryButtonSprite` instead of `CCSprite`).
+- Hardened the new button's implementation by using `m_pListener`.
+- Added compatability with `khronophobia.shortcuts_menu` and `techstudent10.gdguesser`.
+- Added known incompatibilities and contribution info in `about.md`.
+- Fixed wrong positioning of the right menu if you had a different aspect ratio from `16:9`.
+
 # 1.4.0
 - Added setting to compact timely button.
 - Styled the timely layer.
@@ -30,10 +38,10 @@
 - (almost) Complete code rework (Thanks NyteLyte!!)
 
 # 1.1.2
-- Fixed crash when entering CreatorLayer if GDDP Mod option "replace-map-packs" is enabled
+- Fixed crash when entering CreatorLayer if GDDP Mod option `replace-map-packs` is enabled
 
 # 1.1.1
-- Fixed crash when entering CreatorLayer if GDDP Mod option "compact-button" is enabled.
+- Fixed crash when entering CreatorLayer if GDDP Mod option `compact-button` is enabled.
 
 # 1.1.0
 - Added Suggestions from Alphalaneous!
